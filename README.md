@@ -14,7 +14,7 @@ Se ejecuta en  localhost:8080
 · DELETE /categories/id -- Elimina la categoria que se pase como parametro. <br />
 · GET /categories/brand?brand="brand_name" -- Recupera las categorias que contengan productos de X marca. <br />
 · GET /categories/order?order_price="asc" or "desc" -- Recupera las categorias que contengan productos, y  muestra de forma ascendiente (asc) o descendiente (desc)<br />
-· GET /categories/price?price_min=10&price_max=20 -- Recupera las categorias con productos filtrados por un precio minimo y un precio maximo que se pasa como parametro<br />
+· GET /categories/price?price_min=10&price_max=9999999 -- Recupera las categorias con productos filtrados por un precio minimo y un precio maximo que se pasa como parametro<br />
 
 *** Productos ***
 
