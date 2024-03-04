@@ -62,13 +62,38 @@ public class ImplementacionDaoCategoria implements DaoCategoria {
     }
 
     @Override
-    public Categoria editCategory(int id, Categoria cat) {
+    public Categoria editCategory(int id, Categoria updatedCategory) {
+        for (Categoria category : categories) {
+            if (category.getId() == id) {
+                category.setName(updatedCategory.getName());
+                category.setDescription(updatedCategory.getDescription());
+                System.out.println("Category with id " + id + " successfully updated.");
+                return category;
+            }
+        }
+        System.out.println("Category with id " + id + " not found.");
         return null;
     }
 
     @Override
-    public ArrayList<Producto> getCategoryProductsByBrand(String band) {
-        return null;
+    public ArrayList<Producto> getCategoryProductsByBrand(String brand) {
+        ArrayList<Producto> productsByBrand = new ArrayList<>();
+        for (Categoria categoria : categories) {
+            for (Producto producto : categoria.getProductList()) {
+                if (producto.getBrand().equalsIgnoreCase(brand)) {
+                    productsByBrand.add(producto);
+                }
+            }
+        }
+        if (productsByBrand.isEmpty()) {
+            System.out.println("No products found for brand: " + brand);
+        } else {
+            System.out.println("Products found for brand " + brand + ":");
+            for (Producto producto : productsByBrand) {
+                System.out.println("- " + producto.getName());
+            }
+        }
+        return productsByBrand;
     }
 
     @Override
@@ -89,9 +114,9 @@ public class ImplementacionDaoCategoria implements DaoCategoria {
             return new ArrayList<>();
         }
 
-        List<Categoria> orderedList = new ArrayList<>();
+        ArrayList<Categoria> orderedList = new ArrayList<>();
         for (Categoria categoria : categories) {
-            List<Producto> productList = new ArrayList<>(categoria.getProductList());
+            ArrayList<Producto> productList = new ArrayList<>(categoria.getProductList());
             if (productList.isEmpty()) {
                 System.out.println("There are no products to order in this category.");
             } else {
@@ -101,12 +126,12 @@ public class ImplementacionDaoCategoria implements DaoCategoria {
                     productList.sort(Comparator.comparing(Producto::getList_price).reversed());
                 }
                 Categoria orderedCategoria = new Categoria(categoria.getId(), categoria.getName(), categoria.getDescription());
-                orderedCategoria.setProductList((ArrayList<Producto>) productList);
+                orderedCategoria.setProductList(productList);
                 orderedList.add(orderedCategoria);
             }
         }
         System.out.println("Successfully ordered categories in " + order_price + "ending order");
-        return (ArrayList<Categoria>) orderedList;
+        return orderedList;
     }
 
     @Override
@@ -114,14 +139,14 @@ public class ImplementacionDaoCategoria implements DaoCategoria {
         double min = Double.parseDouble(price_min);
         double max = Double.parseDouble(price_max);
 
-        List<Categoria> results = new ArrayList<>();
+        ArrayList<Categoria> results = new ArrayList<>();
         System.out.println("Min: " + min + ". Max: " + max);
 
         if (categories.isEmpty()) {
             System.out.println("There are no created categories, please create new categories.");
         } else {
             for (Categoria categoria : categories) {
-                List<Producto> rangeProductsList = new ArrayList<>();
+                ArrayList<Producto> rangeProductsList = new ArrayList<>();
                 for (Producto producto : categoria.getProductList()) {
                     if (producto.getList_price() >= min && producto.getList_price() <= max) {
                         rangeProductsList.add(producto);
@@ -129,12 +154,12 @@ public class ImplementacionDaoCategoria implements DaoCategoria {
                 }
                 if (!rangeProductsList.isEmpty()) {
                     Categoria priceRangeCategoria = new Categoria(categoria.getId(), categoria.getName(), categoria.getDescription());
-                    priceRangeCategoria.setProductList((ArrayList<Producto>) rangeProductsList);
+                    priceRangeCategoria.setProductList(rangeProductsList);
                     results.add(priceRangeCategoria);
                     System.out.println("This are the products in the range price of " + min + " and " + max + ".");
                 }
             }
         }
-        return (ArrayList<Categoria>) results;
+        return results;
     }
 }
